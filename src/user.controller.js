@@ -1,38 +1,37 @@
 'use strict'
+const UserRepository = require("./user.repository");
+const userRepository = new UserRepository();
 
 const OK = 200;
+const CREATED = 201;
+const ACCEPTED = 202;
 const JSON_FORMAT = 'application/json';
 const CONTENT_TYPE = 'Content-Type';
 
 class UserController {
 
     async findAll(req, res) {
-        const result = [
-            { id: 1, name: "Karthik" },
-            { id: 2, name: "Jeevesh" }
-        ];
         res.status(OK)
             .header(CONTENT_TYPE, JSON_FORMAT)
-            .send(JSON.stringify(result));
+            .send(JSON.stringify(await userRepository.findAll()));
     }
 
     async findOne(req, res) {
-        const result = { id: req.params.id, name: "Karthik" };
         res.status(OK)
             .header(CONTENT_TYPE, JSON_FORMAT)
-            .send(JSON.stringify(result));
+            .send(JSON.stringify(await userRepository.findOne(req.params.id)));
     }
 
     async create(req, res) {
         res.status(OK)
             .header(CONTENT_TYPE, JSON_FORMAT)
-            .send(JSON.stringify(req.body));
+            .send(JSON.stringify(await userRepository.create(req.body)));
     }
 
     async update(req, res) {
         res.status(OK)
             .header(CONTENT_TYPE, JSON_FORMAT)
-            .send(JSON.stringify(req.body));
+            .send(JSON.stringify(await userRepository.update(req.params.id, req.body)));
     }
 
     async delete(req, res) {

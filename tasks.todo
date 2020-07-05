@@ -1,4 +1,4 @@
 Athena POC:
-    ☐ Deploy simple sam hello-world application
+    ✔ Deploy simple sam application @done (7/5/2020, 12:08:33 PM)
     ☐ Create a CRUD API using AWS Athena
     ☐ 

@@ -15,10 +15,12 @@ app.put('/:id', userCtrl.update);
 app.delete('/:id', userCtrl.delete);
 
 
-// # Uncomment for local testing and debugging.
-// app.listen(5000, () => {
-//     console.log("Server listening at port: 5000");
-// });
+// # For local testing
+if (process.env.APP_ENV == 'local') {
+    app.listen(5000, () => {
+        console.log("Server listening at port: 5000");
+    });
+}
 
 const server = awsServerlessExpress.createServer(app)
 exports.handler = (event, context) => awsServerlessExpress.proxy(server, event, context)

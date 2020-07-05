@@ -1,20 +1,24 @@
 {
-  "name": "hello_world",
+  "name": "aws-sam-athena",
   "version": "1.0.0",
-  "description": "hello world sample for NodeJS",
+  "description": "Sample project for demonstrating AWS SAM and Athena using expressjs",
   "main": "app.js",
-  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
-  "author": "SAM CLI",
+  "repository": "https://github.com/karthik-iorta/aws-sam-athena.git",
+  "author": "Karthik Elayaperumal",
   "license": "MIT",
+  "scripts": {
+    "serve": "APP_ENV=local node app.js",
+    "debug": "APP_ENV=local node --inspect app.js",
+    "build": "cd .. && sam build",
+    "deploy": "cd .. && sam build && sam deploy",
+    "test": "mocha tests/unit/"
+  },
   "dependencies": {
     "aws-serverless-express": "^3.3.8",
     "axios": "^0.18.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1"
-  },
-  "scripts": {
-    "test": "mocha tests/unit/"
   },
   "devDependencies": {
     "chai": "^4.2.0",
