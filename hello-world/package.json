@@ -1,0 +1,23 @@
+{
+  "name": "aws-sam-athena",
+  "version": "1.0.0",
+  "description": "Sample project for demonstrating AWS SAM and Athena using expressjs",
+  "main": "app.js",
+  "repository": "https://github.com/karthik-iorta/aws-sam-athena.git",
+  "author": "Karthik Elayaperumal",
+  "license": "MIT",
+  "dependencies": {
+    "aws-serverless-express": "^3.3.8",
+    "axios": "^0.18.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "test": "mocha tests/unit/"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
+  }
+}
