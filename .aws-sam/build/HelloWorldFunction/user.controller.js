@@ -69,11 +69,11 @@ function ok(res, data) {
     }
 }
 
-function err(res, err) {
+function err(res, ex) {
     try {
         res.status(ERROR)
             .header(CONTENT_TYPE, JSON_FORMAT)
-            .send(JSON.stringify({ message: err.message, stack: err.stack }));
+            .send(JSON.stringify({ message: ex.message, stack: ex.stack }));
     } catch {
         res.status(ERROR)
             .header(CONTENT_TYPE, JSON_FORMAT)

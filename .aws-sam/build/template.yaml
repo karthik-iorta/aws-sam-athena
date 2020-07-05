@@ -1,10 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: 'hello-sam
-
-  Sample SAM Template for hello-sam
-
-  '
+Description: "SAM-Athena-CRUD-Example\nAWS Athena CRUD example \n"
 Globals:
   Function:
     Timeout: 30
