@@ -12,54 +12,96 @@ const athenaExpress = new AthenaExpress({ aws, db: "mydatabase" });
 class UserRepository {
 
     async findAll() {
-        const q = "SELECT * FROM users LIMIT 5;";
-        return athenaExpress.query(q);
+        try {
+            const q = "SELECT * FROM users LIMIT 1000;";
+            const result = await athenaExpress.query(q);
+            if (result.Items) {
+                return result.Items;
+            }
+            return result;
+        } catch (error) {
+            throw error;
+        }
     }
 
     async findOne(id) {
-        const q = `SELECT * FROM users WHERE id = '${id}' LIMIT 1;`;
-        return athenaExpress.query(q);
+        try {
+            const q = `SELECT * FROM users WHERE id = '${id}' LIMIT 1;`;
+            const result = await athenaExpress.query(q);
+            if (result.Items && result.Items.length > 0) {
+                return result.Items[0];
+            } else {
+                throw new Error("No entity found for specified id: " + id);
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     async create(user) {
-        if (user) {
-            if (!user.id) {
-                user.id = uniqid();
-            }
-            const q = `INSERT INTO users VALUES (
+        try {
+            if (user) {
+                if (!user.id) {
+                    user.id = uniqid();
+                }
+                const q = `INSERT INTO users VALUES (
                     '${user.first_name}', 
                     '${user.last_name}', 
                     '${user.gender}', 
                     '${user.id}');`
-            return athenaExpress.query(q);
+                await athenaExpress.query(q);
+                return user;
+            }
+            throw new Error("Invalid arguments.");
+        } catch (error) {
+            throw error;
         }
-        return null;
     }
 
     async update(id, user) {
-        if (id && user) {
-            return new Promise(async (resolve, reject) => {
-                const q1 = `SELECT * FROM users WHERE id = '${id}' LIMIT 1;`;
-                const q2 = `SELECT "$path" FROM users WHERE id = '${id}' LIMIT 1;`;
-                const userEntity = (await athenaExpress.query(q1)).Items[0];
-                const path = (await athenaExpress.query(q2)).Items[0]['$path'];
-                const regex = /s3:\/\/([a-z0-9\-]*)\/(.*)/;
-                const matches = regex.exec(path);
-                const bucket = matches[1];
-                const key = matches[2];
-                s3.deleteObject({
-                    Bucket: bucket,
-                    Key: key
-                }, async (err, output) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    Object.assign(userEntity, user);
-                    resolve(await this.create(user));
-                });
-            });
+        try {
+            if (id && user) {
+                let userEntity = await this.findOne(id);
+                Object.assign(userEntity, user);
+                await Promise.all([
+                    this.delete(id),
+                    this.create(userEntity)
+                ]);
+                return userEntity;
+            }
+            throw new Error("Invalid arguments.");
+        } catch (error) {
+            throw error;
         }
-        return null;
+    }
+
+    async delete(id) {
+        try {
+            return new Promise(async (resolve, reject) => {
+                const q = `SELECT "$path" FROM users WHERE id = '${id}' LIMIT 1;`;
+                const data = await athenaExpress.query(q);
+                if (data && data.Items && data.Items.length > 0) {
+                    const path = data.Items[0]['$path'];
+                    const regex = /s3:\/\/([a-z0-9\-]*)\/(.*)/;
+                    const matches = regex.exec(path);
+                    const bucket = matches[1];
+                    const key = matches[2];
+                    s3.deleteObject({
+                        Bucket: bucket,
+                        Key: key
+                    }, async (err, result) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(`${id} deleted.`);
+                    });
+                } else {
+                    reject(new Error("Failed to retrieve S3 path for user id: " + id));
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
     }
 }
 

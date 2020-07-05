@@ -7,21 +7,25 @@
   "author": "Karthik Elayaperumal",
   "license": "MIT",
   "scripts": {
-    "serve": "APP_ENV=local node app.js",
-    "debug": "APP_ENV=local node --inspect app.js",
+    "serve": "APP_ENV=local nodemon app.js",
+    "debug": "APP_ENV=local nodemon --inspect app.js",
     "build": "cd .. && sam build",
     "deploy": "cd .. && sam build && sam deploy",
     "test": "mocha tests/unit/"
   },
   "dependencies": {
+    "athena-express": "^6.0.3",
+    "aws-sdk": "^2.709.0",
     "aws-serverless-express": "^3.3.8",
     "axios": "^0.18.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "uniqid": "^5.2.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.1.4",
+    "nodemon": "^2.0.4"
   }
 }

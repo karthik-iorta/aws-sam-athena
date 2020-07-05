@@ -1,14 +1,14 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  hello-sam
+  SAM-Athena-CRUD-Example
 
-  Sample SAM Template for hello-sam
+  AWS Athena CRUD example 
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 30
 
 Resources:
   ApiGatewayApi:
@@ -25,6 +25,27 @@ Resources:
       CodeUri: src/
       Handler: app.handler
       Runtime: nodejs12.x
+      Policies:
+      - Statement:
+        - Sid: LambdaAthenaPolicy
+          Effect: Allow
+          Action:
+          - athena:StartQueryExecution
+          - athena:GetQueryResults
+          - athena:CancelQueryExecution
+          - athena:StopQueryExecution
+          - athena:GetQueryExecution
+          - glue:GetTable
+          - glue:GetPartitions
+          - glue:GetPartition
+          - glue:BatchCreatePartition
+          - s3:GetObject
+          - s3:PutObject
+          - s3:DeleteObject
+          - s3:ListBucket
+          - s3:CreateBucket
+          - s3:GetBucketLocation
+          Resource: '*'
       Events:
         ProxyApiGreedy:
           Type: Api
